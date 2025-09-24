@@ -88,13 +88,13 @@ function Shop() {
       </Header>
 
       {/* Hero Section */}
-      <Content className="relative bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
+      <Content className="relative bg-white text-white">
         <div className="flex flex-col-reverse md:flex-row items-center gap-8 p-12 min-h-[80vh] justify-center">
           <div className="flex-1 text-center md:text-left px-6 md:px-12">
             <h1 className="text-5xl md:text-6xl font-extrabold mb-6 leading-tight">
-              Upgrade Your Tech <span className="text-yellow-300">Today!</span>
+              Upgrade Your Tech <span className="text-yellow-900">Today!</span>
             </h1>
-            <p className="text-lg mb-6 text-gray-100">
+            <p className="text-lg mb-6 text-gray-500">
               Discover premium gadgets at unbeatable prices — handpicked just for you.
             </p>
             <Button
@@ -112,29 +112,29 @@ function Shop() {
             <img
               src={heroimg}
               alt="Hero"
-              className="w-full h-full object-cover rounded-2xl shadow-2xl"
+              className="w-full h-full object-cover"
             />
           </div>
         </div>
       </Content>
 
       {/* Featured Carousel */}
-      {featured.length > 0 && (
-        <div className="bg-white py-12 shadow-inner">
+      {/* {featured.length > 1 && (
+        <div className="bg-blue-100 py-12 shadow-inner">
           <h2 className="text-center text-3xl font-bold mb-8 flex items-center justify-center gap-2 text-gray-800">
             <FireOutlined className="text-red-500" /> Featured Picks
           </h2>
           <div className="max-w-5xl mx-auto">
             <Carousel autoplay dots>
               {featured.map((p) => (
-                <div key={p._id || p.ID} className="px-12">
+                <div key={p._id || p.ID} className="px-7">
                   <ProductCard product={p} onOpen={setSelected} />
                 </div>
               ))}
             </Carousel>
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Deals Header */}
       <div ref={productSectionRef} className="max-w-7xl mx-auto px-8 my-10 flex items-center justify-between">
@@ -167,7 +167,7 @@ function Shop() {
       </Content>
 
       {/* Newsletter Signup */}
-      <div className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white py-16">
+      <div className="bg-blue-900 text-white py-16">
         <div className="max-w-3xl mx-auto text-center px-6">
           <h2 className="text-3xl font-bold mb-4">Stay Updated</h2>
           <p className="mb-6 text-lg text-gray-100">
@@ -183,14 +183,14 @@ function Shop() {
       </div>
 
       {/* Footer */}
-      <Footer className="bg-gray-900 text-gray-400 py-12 mt-8">
+      <Footer className="bg-blue-100 text-gray-400 py-12 mt-8">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 px-6">
           <div>
-            <h3 className="text-white font-semibold text-lg mb-4">Gadget Store</h3>
+            <h3 className="text-yellow-900 font-semibold text-lg mb-4">Gadget Store</h3>
             <p>Your one-stop shop for the latest and greatest gadgets.</p>
           </div>
           <div>
-            <h3 className="text-white font-semibold text-lg mb-4">Quick Links</h3>
+            <h3 className="text-yellow-900 font-semibold text-lg mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li><a href="/" className="hover:text-white">Home</a></li>
               <li><a href="/vendor-dashboard" className="hover:text-white">Vendor Dashboard</a></li>
@@ -198,7 +198,7 @@ function Shop() {
             </ul>
           </div>
           <div>
-            <h3 className="text-white font-semibold text-lg mb-4">Follow Us</h3>
+            <h3 className="text-yellow-900 font-semibold text-lg mb-4">Follow Us</h3>
             <p>Stay connected on social media for the latest updates.</p>
             <div className="flex gap-4 mt-3">
               <a href="#"><i className="fab fa-facebook text-xl text-white"></i></a>
