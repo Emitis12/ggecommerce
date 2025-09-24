@@ -3,7 +3,7 @@
 // ====================
 const API_BASE_URL =
   process.env.NODE_ENV === "production"
-    ? "https://ggbackend-bhs5.onrender.com/api"
+    ? "https://ggbackend-bhs5.onrender.com/"
 
 // ====================
 // Token Helpers
