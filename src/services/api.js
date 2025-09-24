@@ -1,62 +1,104 @@
-// Detect environment for universal proxy URL
-const isNetlify = window.location.hostname.includes("netlify.app");
-export const DEPLOY_URL = isNetlify
-  ? "/.netlify/functions/proxy"
-  : "/api/proxy"; // Vercel default
+// ====================
+// Detect environment
+// ====================
+const API_BASE_URL =
+  process.env.NODE_ENV === "production"
+    ? "https://your-backend-domain.com/api" // <-- change after deploying backend
+    : "http://localhost:3002/api";
 
-// === Generic POST request helper ===
-async function apiRequest(action, payload = {}) {
-  const res = await fetch(DEPLOY_URL, {
-    method: "POST",
+// ====================
+// Token Helpers
+// ====================
+function getToken() {
+  return localStorage.getItem("token");
+}
+
+function setToken(token) {
+  localStorage.setItem("token", token);
+}
+
+function clearToken() {
+  localStorage.removeItem("token");
+}
+
+// ====================
+// Generic request helper
+// ====================
+async function apiRequest(endpoint, method = "POST", payload = null) {
+  const token = getToken();
+
+  const options = {
+    method,
     headers: {
       "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
-    body: JSON.stringify({ action, ...payload }),
-  });
+  };
+
+  if (payload) options.body = JSON.stringify(payload);
+
+  const res = await fetch(`${API_BASE_URL}${endpoint}`, options);
 
   if (!res.ok) {
-    throw new Error(`API request failed with status ${res.status}`);
+    const text = await res.text();
+    throw new Error(`API ${endpoint} failed: ${res.status} - ${text}`);
   }
 
   return res.json();
 }
 
-// === Vendor Authentication ===
+// ====================
+// Vendor Authentication
+// ====================
 export async function registerVendor(vendor) {
   // vendor = { email, password, name, logo, phone }
-  return apiRequest("registerVendor", vendor);
+  return apiRequest("/auth/register", "POST", vendor);
 }
 
 export async function loginVendor(vendor) {
   // vendor = { email, password }
-  return apiRequest("loginVendor", vendor);
+  const data = await apiRequest("/auth/login", "POST", vendor);
+
+  if (data.success && data.token) {
+    setToken(data.token); // ✅ store token
+  }
+
+  return data;
 }
 
-// === Products ===
-export async function fetchProducts(vendorEmail = null) {
-  // Always use POST to avoid CORS issues
-  const payload = { action: "getProducts" };
-  if (vendorEmail) payload.vendorEmail = vendorEmail;
+export function logoutVendor() {
+  clearToken();
+}
 
-  return apiRequest("getProducts", payload);
+export function getCurrentVendor() {
+  return getToken(); // if null => not logged in
+}
+
+// ====================
+// Products
+// ====================
+export async function fetchProducts(vendorEmail = null) {
+  const url = vendorEmail
+    ? `/products?vendorEmail=${encodeURIComponent(vendorEmail)}`
+    : "/products";
+  return apiRequest(url, "GET");
 }
 
 export async function addProduct(product) {
-  // product = { title, price, image, vendorEmail, vendorName, vendorPhone, vendorLogo }
-  return apiRequest("addProduct", product);
+  return apiRequest("/products", "POST", product);
 }
 
 export async function editProduct(product) {
-  // product = { id, title, price, image }
-  return apiRequest("editProduct", product);
+  return apiRequest(`/products/${product.id}`, "PUT", product);
 }
 
 export async function deleteProduct(id) {
-  return apiRequest("deleteProduct", { id });
+  return apiRequest(`/products/${id}`, "DELETE");
 }
 
-// === Orders ===
+// ====================
+// Orders
+// ====================
 export async function placeOrder(order) {
-  // order = { name, email, phone, address, items, total, paymentRef }
-  return apiRequest("placeOrder", order);
+  return apiRequest("/orders", "POST", order);
 }

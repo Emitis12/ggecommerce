@@ -1,52 +1,103 @@
 import React from "react";
 import { useCartState, useCartDispatch } from "../context/CartContext";
-import { Drawer, Button, List, Typography, InputNumber } from "antd";
+import { Drawer, Button, List, Typography, InputNumber, Divider } from "antd";
+import { ShoppingCartOutlined, DeleteOutlined } from "@ant-design/icons";
 
-export default function Cart({ open, onClose }) {
-  const { items } = useCartState();
+export default function Cart({ open, onClose, onCheckout }) {
+  const { items = [] } = useCartState();
   const dispatch = useCartDispatch();
-  const total = items.reduce((s, i) => s + i.product.price * i.qty, 0);
+
+  const total = items.reduce(
+    (s, i) => s + (i?.product?.price || 0) * (i?.qty || 0),
+    0
+  );
 
   return (
-    <Drawer title="Your Cart" placement="right" open={open} onClose={onClose} width={400}>
+    <Drawer
+      title={
+        <div className="flex items-center gap-2">
+          <ShoppingCartOutlined className="text-blue-600" />
+          <span className="font-semibold">Your Cart</span>
+        </div>
+      }
+      placement="right"
+      open={open}
+      onClose={onClose}
+      width={420}
+    >
       {items.length === 0 ? (
-        <Typography.Text>Your cart is empty</Typography.Text>
+        <Typography.Text type="secondary">Your cart is empty 🛒</Typography.Text>
       ) : (
         <>
           <List
             itemLayout="horizontal"
             dataSource={items}
-            renderItem={(i) => (
-              <List.Item
-                actions={[
-                  <InputNumber
-                    key="qty"
-                    min={1}
-                    value={i.qty}
-                    onChange={(q) => dispatch({ type: "UPDATE_QTY", payload: { productId: i.product.id, qty: q } })}
-                  />,
-                  <Button
-                    key="remove"
-                    danger
-                    type="link"
-                    onClick={() => dispatch({ type: "REMOVE_ITEM", payload: { productId: i.product.id } })}
-                  >
-                    Remove
-                  </Button>,
-                ]}
-              >
-                <List.Item.Meta
-                  avatar={<img src={i.product.images[0]} className="w-16 h-12 object-cover rounded" />}
-                  title={i.product.title}
-                  description={`₦${(i.product.price * i.qty).toLocaleString()}`}
-                />
-              </List.Item>
-            )}
+            renderItem={(i) =>
+              i?.product ? (
+                <List.Item
+                  className="hover:bg-gray-50 rounded-lg px-2"
+                  actions={[
+                    <InputNumber
+                      key="qty"
+                      min={1}
+                      value={i.qty}
+                      onChange={(q) =>
+                        dispatch({
+                          type: "UPDATE_QTY",
+                          payload: {
+                            productId: i.product.id || i.product._id,
+                            qty: q,
+                          },
+                        })
+                      }
+                    />,
+                    <Button
+                      key="remove"
+                      danger
+                      type="text"
+                      icon={<DeleteOutlined />}
+                      onClick={() =>
+                        dispatch({
+                          type: "REMOVE_ITEM",
+                          payload: { productId: i.product.id || i.product._id },
+                        })
+                      }
+                    />,
+                  ]}
+                >
+                  <List.Item.Meta
+                    avatar={
+                      <img
+                        src={
+                          i.product.imageUrl ||
+                          "https://via.placeholder.com/80x60?text=No+Image"
+                        }
+                        alt={i.product.title || "Product image"}
+                        className="w-16 h-14 object-cover rounded-lg"
+                      />
+                    }
+                    title={<span className="font-medium">{i.product.title}</span>}
+                    description={`₦${(
+                      (i.product.price || 0) * (i.qty || 0)
+                    ).toLocaleString()}`}
+                  />
+                </List.Item>
+              ) : null
+            }
           />
-          <div className="mt-4 border-t pt-4">
-            <div className="flex justify-between font-semibold">Subtotal <span>₦{total.toLocaleString()}</span></div>
-            <Button type="primary" className="w-full mt-4">Proceed to Checkout</Button>
+          <Divider />
+          <div className="flex justify-between text-lg font-semibold">
+            <span>Subtotal</span>
+            <span>₦{total.toLocaleString()}</span>
           </div>
+          <Button
+            type="primary"
+            size="large"
+            className="w-full mt-4 rounded-lg"
+            onClick={onCheckout}
+          >
+            Proceed to Checkout
+          </Button>
         </>
       )}
     </Drawer>
