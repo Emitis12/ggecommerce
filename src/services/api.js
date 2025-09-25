@@ -3,8 +3,8 @@
 // ====================
 const API_BASE_URL =
   process.env.NODE_ENV === "production"
-    ? "/https://ggbackend-bhs5.onrender.com/api" // <-- change after deploying backend
-    : "http://localhost:3002/api";
+    ? "https://ggbackend-bhs5.onrender.com/api" // deployed backend URL
+    : "http://localhost:3002"; // local backend for development
 
 // ====================
 // Token Helpers
@@ -37,7 +37,10 @@ async function apiRequest(endpoint, method = "POST", payload = null) {
 
   if (payload) options.body = JSON.stringify(payload);
 
-  const res = await fetch(`${API_BASE_URL}${endpoint}`, options);
+  // Ensure endpoint starts with /
+  const url = `${API_BASE_URL}${endpoint.startsWith("/") ? endpoint : "/" + endpoint}`;
+
+  const res = await fetch(url, options);
 
   if (!res.ok) {
     const text = await res.text();
@@ -59,8 +62,9 @@ export async function loginVendor(vendor) {
   // vendor = { email, password }
   const data = await apiRequest("/auth/login", "POST", vendor);
 
+  // Make sure backend returns { success: true, token: "..." }
   if (data.success && data.token) {
-    setToken(data.token); // ✅ store token
+    setToken(data.token); // store token
   }
 
   return data;
@@ -70,8 +74,9 @@ export function logoutVendor() {
   clearToken();
 }
 
+// Returns token if logged in, otherwise null
 export function getCurrentVendor() {
-  return getToken(); // if null => not logged in
+  return getToken();
 }
 
 // ====================
