@@ -2,10 +2,12 @@ import React from "react";
 import { useCartState, useCartDispatch } from "../context/CartContext";
 import { Drawer, Button, List, Typography, InputNumber, Divider } from "antd";
 import { ShoppingCartOutlined, DeleteOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
-export default function Cart({ open, onClose, onCheckout }) {
+export default function Cart({ open, onClose }) {
   const { items = [] } = useCartState();
   const dispatch = useCartDispatch();
+  const navigate = useNavigate();
 
   const total = items.reduce(
     (s, i) => s + (i?.product?.price || 0) * (i?.qty || 0),
@@ -26,7 +28,9 @@ export default function Cart({ open, onClose, onCheckout }) {
       width={420}
     >
       {items.length === 0 ? (
-        <Typography.Text type="secondary">Your cart is empty 🛒</Typography.Text>
+        <Typography.Text type="secondary">
+          Your cart is empty 🛒
+        </Typography.Text>
       ) : (
         <>
           <List
@@ -69,14 +73,16 @@ export default function Cart({ open, onClose, onCheckout }) {
                     avatar={
                       <img
                         src={
-                          i.product.imageUrl ||
+                          i.product.image ||
                           "https://via.placeholder.com/80x60?text=No+Image"
                         }
                         alt={i.product.title || "Product image"}
                         className="w-16 h-14 object-cover rounded-lg"
                       />
                     }
-                    title={<span className="font-medium">{i.product.title}</span>}
+                    title={
+                      <span className="font-medium">{i.product.title}</span>
+                    }
                     description={`₦${(
                       (i.product.price || 0) * (i.qty || 0)
                     ).toLocaleString()}`}
@@ -94,7 +100,10 @@ export default function Cart({ open, onClose, onCheckout }) {
             type="primary"
             size="large"
             className="w-full mt-4 rounded-lg"
-            onClick={onCheckout}
+            onClick={() => {
+              onClose(); // close the cart drawer
+              navigate("/checkout"); // go to checkout page
+            }}
           >
             Proceed to Checkout
           </Button>

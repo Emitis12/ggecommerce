@@ -5,8 +5,9 @@ import ProductCard from "./components/ProductCard";
 import ProductModal from "./components/ProductModal";
 import Cart from "./components/Cart";
 import VendorDashboard from "./pages/VendorDashboard";
-import { Badge, Layout, Button, Spin, Empty, Row, Col, message, Carousel, Input } from "antd";
-import { ShoppingCartOutlined, DownOutlined, FireOutlined, MailOutlined } from "@ant-design/icons";
+import Checkout from "./pages/Checkout";      // ✅ Import Checkout page
+import { Badge, Layout, Button, Spin, Empty, Row, Col, message, Input } from "antd";
+import { ShoppingCartOutlined, DownOutlined, MailOutlined } from "@ant-design/icons";
 import heroimg from "../src/assets/img1.jpg";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
@@ -14,7 +15,6 @@ const { Header, Content, Footer } = Layout;
 
 function Shop() {
   const [products, setProducts] = useState([]);
-  const [featured, setFeatured] = useState([]);
   const [selected, setSelected] = useState(null);
   const [showCart, setShowCart] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -33,7 +33,6 @@ function Shop() {
         const res = await fetchProducts();
         if (res.success && Array.isArray(res.products)) {
           setProducts(res.products);
-          setFeatured(res.products.slice(0, 5)); // first 5 as featured
         } else {
           setProducts([]);
           setError(res.message || "No products found.");
@@ -69,7 +68,7 @@ function Shop() {
 
   return (
     <Layout className="min-h-screen bg-gray-50">
-      {/* Sticky Navbar */}
+      {/* Navbar */}
       <Header
         style={{ backgroundColor: "#ffffff" }}
         className="shadow sticky top-0 z-50 flex justify-between items-center px-8"
@@ -107,52 +106,24 @@ function Shop() {
               Shop Now
             </Button>
           </div>
-
           <div className="flex-1 px-6 md:px-12">
-            <img
-              src={heroimg}
-              alt="Hero"
-              className="w-full h-full object-cover"
-            />
+            <img src={heroimg} alt="Hero" className="w-full h-full object-cover" />
           </div>
         </div>
       </Content>
 
-      {/* Featured Carousel */}
-      {/* {featured.length > 1 && (
-        <div className="bg-blue-100 py-12 shadow-inner">
-          <h2 className="text-center text-3xl font-bold mb-8 flex items-center justify-center gap-2 text-gray-800">
-            <FireOutlined className="text-red-500" /> Featured Picks
-          </h2>
-          <div className="max-w-5xl mx-auto">
-            <Carousel autoplay dots>
-              {featured.map((p) => (
-                <div key={p._id || p.ID} className="px-7">
-                  <ProductCard product={p} onOpen={setSelected} />
-                </div>
-              ))}
-            </Carousel>
-          </div>
-        </div>
-      )} */}
-
-      {/* Deals Header */}
+      {/* Products */}
       <div ref={productSectionRef} className="max-w-7xl mx-auto px-8 my-10 flex items-center justify-between">
         <h2 className="text-3xl font-bold flex items-center gap-2 text-gray-800">
           Deals On <DownOutlined />
         </h2>
       </div>
 
-      {/* Product Section */}
       <Content className="max-w-7xl mx-auto px-8 pb-12">
         {loading ? (
-          <div className="flex justify-center py-20">
-            <Spin size="large" />
-          </div>
+          <div className="flex justify-center py-20"><Spin size="large" /></div>
         ) : error ? (
-          <div className="flex justify-center py-20">
-            <p className="text-red-500">{error}</p>
-          </div>
+          <div className="flex justify-center py-20"><p className="text-red-500">{error}</p></div>
         ) : products.length === 0 ? (
           <Empty description="No products available" className="py-20" />
         ) : (
@@ -166,7 +137,7 @@ function Shop() {
         )}
       </Content>
 
-      {/* Newsletter Signup */}
+      {/* Newsletter */}
       <div className="bg-blue-900 text-white py-16">
         <div className="max-w-3xl mx-auto text-center px-6">
           <h2 className="text-3xl font-bold mb-4">Stay Updated</h2>
@@ -228,6 +199,17 @@ function Shop() {
   );
 }
 
+// Success Page (very simple)
+function SuccessPage() {
+  return (
+    <div className="max-w-xl mx-auto text-center py-20">
+      <h2 className="text-2xl font-bold text-green-600 mb-4">Order Successful 🎉</h2>
+      <p className="text-gray-600 mb-6">Thank you for your purchase! Your order has been placed.</p>
+      <Link to="/"><Button type="primary">Back to Home</Button></Link>
+    </div>
+  );
+}
+
 // Wrap Shop with Router and CartProvider
 export default function App() {
   return (
@@ -236,6 +218,8 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Shop />} />
           <Route path="/vendor-dashboard" element={<VendorDashboard />} />
+          <Route path="/checkout" element={<Checkout />} />    {/* ✅ Checkout route */}
+          <Route path="/success" element={<SuccessPage />} />  {/* ✅ Success route */}
         </Routes>
       </CartProvider>
     </Router>

@@ -5,7 +5,7 @@ export default function ProductCard({ product, onOpen }) {
   const [hovered, setHovered] = useState(false);
 
   // Use vendor imageUrl or fallback placeholder
-  const main = product.imageUrl || "https://via.placeholder.com/300x200?text=No+Image";
+  const main = product.image || "https://via.placeholder.com/300x200?text=No+Image";
 
   return (
     <Card

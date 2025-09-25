@@ -5,7 +5,7 @@ export default function ProductModal({ product, onClose, onAddToCart, onOrderNow
   const [qty, setQty] = useState(1);
   if (!product) return null;
 
-  const image = product.imageUrl || "https://via.placeholder.com/600x400?text=No+Image";
+  const image = product.image || "https://via.placeholder.com/600x400?text=No+Image";
 
   return (
     <Modal

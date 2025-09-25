@@ -3,7 +3,7 @@
 // ====================
 const API_BASE_URL =
   process.env.NODE_ENV === "production"
-    ? "https://your-backend-domain.com/api" // <-- change after deploying backend
+    ? "/https://ggbackend-bhs5.onrender.com/api" // <-- change after deploying backend
     : "http://localhost:3002/api";
 
 // ====================

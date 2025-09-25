@@ -35,7 +35,7 @@ export default function Checkout() {
                 <List.Item.Meta
                   avatar={
                     <img
-                      src={i.product.images?.[0] || "/placeholder.png"}
+                      src={i.product.image || "/placeholder.png"}
                       alt={i.product.title || "Product"}
                       className="w-16 h-12 object-cover rounded"
                     />
