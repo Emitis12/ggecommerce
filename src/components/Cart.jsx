@@ -1,6 +1,6 @@
 import React from "react";
 import { useCartState, useCartDispatch } from "../context/CartContext";
-import { Drawer, Button, List, Typography, InputNumber, Divider } from "antd";
+import { Drawer, Button, Typography, InputNumber, Divider } from "antd";
 import { ShoppingCartOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
@@ -18,79 +18,79 @@ export default function Cart({ open, onClose }) {
     <Drawer
       title={
         <div className="flex items-center gap-2">
-          <ShoppingCartOutlined className="text-blue-600" />
-          <span className="font-semibold">Your Cart</span>
+          <ShoppingCartOutlined className="text-blue-600 text-xl" />
+          <span className="font-semibold text-lg">Your Cart</span>
         </div>
       }
       placement="right"
       open={open}
       onClose={onClose}
-      width={420}
+      width="50%" // Half screen width for mobile
+      bodyStyle={{ padding: "1rem", backgroundColor: "#f9fafb" }}
+      headerStyle={{ borderBottom: "1px solid #e5e7eb" }}
     >
       {items.length === 0 ? (
-        <Typography.Text type="secondary">
+        <div className="flex justify-center items-center h-full text-gray-500 font-medium">
           Your cart is empty 🛒
-        </Typography.Text>
+        </div>
       ) : (
         <>
-          <List
-            itemLayout="horizontal"
-            dataSource={items}
-            renderItem={(i) =>
+          <div className="flex flex-col gap-4 max-h-[60vh] overflow-y-auto pr-2">
+            {items.map((i) =>
               i?.product ? (
-                <List.Item
-                  className="hover:bg-gray-50 rounded-lg px-2"
-                  actions={[
-                    <InputNumber
-                      key="qty"
-                      min={1}
-                      value={i.qty}
-                      onChange={(q) =>
-                        dispatch({
-                          type: "UPDATE_QTY",
-                          payload: {
-                            productId: i.product.id || i.product._id,
-                            qty: q,
-                          },
-                        })
-                      }
-                    />,
-                    <Button
-                      key="remove"
-                      danger
-                      type="text"
-                      icon={<DeleteOutlined />}
-                      onClick={() =>
-                        dispatch({
-                          type: "REMOVE_ITEM",
-                          payload: { productId: i.product.id || i.product._id },
-                        })
-                      }
-                    />,
-                  ]}
+                <div
+                  key={i.product._id || i.product.id}
+                  className="flex items-center gap-3 bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300"
                 >
-                  <List.Item.Meta
-                    avatar={
-                      <img
-                        src={
-                          i.product.image ||
-                          "https://via.placeholder.com/80x60?text=No+Image"
-                        }
-                        alt={i.product.title || "Product image"}
-                        className="w-16 h-14 object-cover rounded-lg"
-                      />
+                  <img
+                    src={
+                      i.product.image ||
+                      "https://via.placeholder.com/80x60?text=No+Image"
                     }
-                    title={
-                      <span className="font-medium">{i.product.title}</span>
-                    }
-                    description={`₦${(
-                      (i.product.price || 0) * (i.qty || 0)
-                    ).toLocaleString()}`}
+                    alt={i.product.title || "Product"}
+                    className="w-20 h-20 object-cover rounded-md"
                   />
-                </List.Item>
+                  <div className="flex-1 flex flex-col justify-between h-full">
+                    <h4 className="font-semibold text-gray-800 truncate">
+                      {i.product.title}
+                    </h4>
+                    <div className="text-blue-600 font-medium">
+                      ₦{((i.product.price || 0) * (i.qty || 0)).toLocaleString()}
+                    </div>
+                    <div className="flex items-center gap-2 mt-2">
+                      <InputNumber
+                        min={1}
+                        value={i.qty}
+                        onChange={(q) =>
+                          dispatch({
+                            type: "UPDATE_QTY",
+                            payload: {
+                              productId: i.product.id || i.product._id,
+                              qty: q,
+                            },
+                          })
+                        }
+                        size="small"
+                      />
+                      <Button
+                        type="text"
+                        danger
+                        icon={<DeleteOutlined />}
+                        onClick={() =>
+                          dispatch({
+                            type: "REMOVE_ITEM",
+                            payload: { productId: i.product.id || i.product._id },
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
               ) : null
-            }
-          />
+            )}
+          </div>
+
+          {/* Footer */}
           <Divider />
           <div className="flex justify-between text-lg font-semibold">
             <span>Subtotal</span>
@@ -99,9 +99,9 @@ export default function Cart({ open, onClose }) {
           <Button
             type="primary"
             size="large"
-            className="w-full mt-4 rounded-lg"
+            className="w-full mt-4 rounded-lg bg-blue-600 hover:bg-blue-700"
             onClick={() => {
-              onClose(); // close the cart drawer
+              onClose(); // close drawer
               navigate("/checkout"); // go to checkout page
             }}
           >
