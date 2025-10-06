@@ -24,10 +24,6 @@ import ProductCard from "../components/ProductCard";
 import ProductModal from "../components/ProductModal";
 import Cart from "../components/Cart";
 
-// Slick carousel CSS imports
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-
 const { Content } = Layout;
 const { Option } = Select;
 
@@ -54,7 +50,7 @@ export default function Shop() {
     { key: "gaming", label: "Gaming" },
   ];
 
-  // ===== Fetch Products from backend =====
+  // ===== Fetch Products =====
   useEffect(() => {
     async function loadProducts() {
       setLoading(true);
@@ -103,7 +99,7 @@ export default function Shop() {
   // ===== Scroll to Top =====
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
-  // ===== Seamless Trending Ticker =====
+  // ===== Trending Ticker =====
   useEffect(() => {
     const ticker = tickerRef.current;
     if (!ticker) return;
@@ -142,60 +138,54 @@ export default function Shop() {
     isHovered.current = false;
   };
 
- // Inline TrendingCard inside Shop.jsx
-const TrendingCard = ({ product, onOpen }) => {
-  const mainImage =
-    product.image || "https://via.placeholder.com/400x250?text=No+Image";
+  // ===== Trending Card =====
+  const TrendingCard = ({ product, onOpen }) => {
+    const mainImage =
+      product.image || "https://via.placeholder.com/400x250?text=No+Image";
 
-  return (
-    <div
-      className="relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.03] cursor-pointer group h-64 sm:h-72 md:h-72"
-      onClick={() => onOpen(product)}
-    >
-      {/* Product Image */}
-      <img
-        src={mainImage}
-        alt={product.title || "Product"}
-        className="w-full h-full object-cover"
-      />
-
-      {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-90 group-hover:opacity-100 transition-all duration-500"></div>
-
-      {/* Content overlay */}
-      <div className="absolute bottom-3 left-3 right-3 text-white">
-        <div className="flex items-center gap-2 mb-1">
-          <FireOutlined className="text-orange-400 text-lg sm:text-xl animate-pulse" />
-          <span className="uppercase tracking-wide text-xs sm:text-sm text-orange-400 font-semibold">
-            Trending
-          </span>
+    return (
+      <div
+        className="relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.03] cursor-pointer group h-64 sm:h-72 md:h-72"
+        onClick={() => onOpen(product)}
+      >
+        <img
+          src={mainImage}
+          alt={product.title || "Product"}
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-90 group-hover:opacity-100 transition-all duration-500"></div>
+        <div className="absolute bottom-3 left-3 right-3 text-white">
+          <div className="flex items-center gap-2 mb-1">
+            <FireOutlined className="text-orange-400 text-lg sm:text-xl animate-pulse" />
+            <span className="uppercase tracking-wide text-xs sm:text-sm text-orange-400 font-semibold">
+              Trending
+            </span>
+          </div>
+          <h3 className="text-sm sm:text-base md:text-lg font-bold mb-1 truncate">
+            {product.title}
+          </h3>
+          <p className="text-blue-300 text-xs sm:text-sm md:text-base font-medium mb-2">
+            ₦{(product.price || 0).toLocaleString()}
+          </p>
+          <Button
+            type="primary"
+            size="small"
+            className="mt-1 sm:mt-2 bg-blue-600 hover:bg-blue-700 border-none rounded-lg px-3 sm:px-4"
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpen(product);
+            }}
+          >
+            View Details
+          </Button>
         </div>
-        <h3 className="text-sm sm:text-base md:text-lg font-bold mb-1 truncate">
-          {product.title}
-        </h3>
-        <p className="text-blue-300 text-xs sm:text-sm md:text-base font-medium mb-2">
-          ₦{(product.price || 0).toLocaleString()}
-        </p>
-        <Button
-          type="primary"
-          size="small"
-          className="mt-1 sm:mt-2 bg-blue-600 hover:bg-blue-700 border-none rounded-lg px-3 sm:px-4"
-          onClick={(e) => {
-            e.stopPropagation();
-            onOpen(product);
-          }}
-        >
-          View Details
-        </Button>
       </div>
-    </div>
-  );
-};
-
+    );
+  };
 
   return (
     <Layout className="bg-white text-gray-800 min-h-screen">
-      {/* ===== Filter + Search Section ===== */}
+      {/* ===== Filter + Search ===== */}
       <div className="max-w-7xl mx-auto mt-24 px-6 py-6 bg-gray-50 rounded-lg shadow-sm mb-6 flex flex-col md:flex-row justify-between items-center gap-4">
         <div className="flex items-center gap-2">
           <FilterOutlined className="text-blue-600 text-lg" />
@@ -236,7 +226,7 @@ const TrendingCard = ({ product, onOpen }) => {
 
       {/* ===== Trending Section ===== */}
       <section className="max-w-7xl mx-auto px-6 text-center mb-16 relative">
-        <h2 className="text-3xl font-bold mb-4 flex items-center justify-center gap-2 text-gray-900">
+        <h2 className="text-3xl sm:text-4xl font-extrabold mb-4 flex items-center justify-center gap-3 bg-gradient-to-r from-red-500 to-orange-400 bg-clip-text text-transparent">
           <FireOutlined className="text-red-500" /> Trending Now
         </h2>
         <p className="text-gray-500 mb-8 max-w-2xl mx-auto">
@@ -250,7 +240,7 @@ const TrendingCard = ({ product, onOpen }) => {
         ) : (
           <div
             ref={tickerRef}
-            className="flex overflow-hidden gap-6 scroll-smooth cursor-grab"
+            className="flex gap-4 overflow-x-auto scroll-smooth touch-pan-x scrollbar-hide"
             onMouseEnter={() => (isHovered.current = true)}
             onMouseLeave={() => (isHovered.current = false)}
             onTouchStart={handleTouchStart}
@@ -259,7 +249,10 @@ const TrendingCard = ({ product, onOpen }) => {
           >
             {[...filtered.slice(0, 8), ...filtered.slice(0, 8)].map(
               (product, idx) => (
-                <div key={idx} className="min-w-[260px]">
+                <div
+                  key={idx}
+                  className="flex-shrink-0 min-w-[60%] sm:min-w-[40%] md:min-w-[250px] lg:min-w-[280px]"
+                >
                   <TrendingCard product={product} onOpen={setSelected} />
                 </div>
               )
@@ -268,9 +261,9 @@ const TrendingCard = ({ product, onOpen }) => {
         )}
       </section>
 
-      {/* ===== Product Grid ===== */}
+      {/* ===== All Products ===== */}
       <Content className="max-w-7xl mx-auto px-6 pb-24">
-        <h2 className="text-2xl font-bold mb-6 text-gray-900 border-b border-gray-100 pb-2">
+        <h2 className="text-2xl sm:text-3xl font-extrabold mb-6 bg-gradient-to-r from-blue-500 to-teal-400 bg-clip-text text-transparent border-b border-gray-100 pb-2">
           All Products
         </h2>
 
@@ -291,7 +284,7 @@ const TrendingCard = ({ product, onOpen }) => {
         )}
       </Content>
 
-      {/* ===== Floating Back to Top Button ===== */}
+      {/* ===== Back to Top ===== */}
       <FloatButton
         icon={<ArrowUpOutlined />}
         tooltip="Back to top"
