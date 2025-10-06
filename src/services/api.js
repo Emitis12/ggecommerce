@@ -4,7 +4,7 @@
 const API_BASE_URL =
   process.env.NODE_ENV === "production"
     ? "https://ggbackend-bhs5.onrender.com/api" // deployed backend URL
-    : "http://localhost:3002"; // local backend for development
+    : "http://localhost:3002/api"; // local backend for development
 
 // ====================
 // Token Helpers
