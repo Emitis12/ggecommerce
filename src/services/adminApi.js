@@ -1,7 +1,11 @@
 import axios from "axios";
 
 // ===== Base API URL =====
-const API_URL = import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "http://localhost:3002/api";
+const API_URL =
+  import.meta.env.VITE_API_URL?.replace(/\/$/, "") ||
+  (import.meta.env.MODE === "production"
+    ? "https://ggbackend-bhs5.onrender.com/api" // hosted backend
+    : "http://localhost:3002/api"); // local backend
 
 // ===== Token Helpers =====
 export function getAdminToken() {
@@ -16,6 +20,7 @@ export function removeAdminToken() {
   localStorage.removeItem("adminToken");
 }
 
+// ===== Auth Headers =====
 function getAuthHeaders() {
   const token = getAdminToken();
   return {
@@ -97,10 +102,7 @@ export async function fetchAllProducts() {
 
 export async function deleteProduct(productId) {
   try {
-    const res = await axios.delete(
-      `${API_URL}/admin/products/${productId}`,
-      getAuthHeaders()
-    );
+    const res = await axios.delete(`${API_URL}/admin/products/${productId}`, getAuthHeaders());
     return res.data;
   } catch (err) {
     console.error("deleteProduct error:", err);
