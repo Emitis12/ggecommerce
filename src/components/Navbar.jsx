@@ -63,8 +63,8 @@ export default function Navbar() {
             to="/"
             className="text-2xl font-extrabold transition-colors select-none"
           >
-            <span className="text-red-600">Geeky</span>
-            <span className="text-blue-800">Gadget</span>
+            <span className="text-red-600">Gadget</span> {" "}
+            <span className="text-blue-800">Geeky</span>
           </Link>
 
           {/* Desktop Menu */}

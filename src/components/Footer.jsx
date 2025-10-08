@@ -12,7 +12,7 @@ export default function Footer() {
     <footer className="bg-gray-900 text-gray-300 py-10 mt-20">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 px-6">
         <div>
-          <h2 className="text-2xl font-bold text-white mb-4">GadgetHub</h2>
+          <h2 className="text-2xl font-bold text-white mb-4">GadgetGeeky</h2>
           <p className="text-sm leading-relaxed">
             Your one-stop hub for the latest tech gadgets and accessories.  
             Experience modern shopping the smart way.
@@ -78,7 +78,7 @@ export default function Footer() {
       </div>
 
       <div className="mt-10 border-t border-gray-700 text-center pt-6 text-sm text-gray-400">
-        © {new Date().getFullYear()} GadgetHub — All Rights Reserved.
+        © {new Date().getFullYear()} Gadget Geeky - All Rights Reserved.
       </div>
     </footer>
   );

@@ -56,7 +56,7 @@ function LandingPage() {
             Elevate Your <span className="text-[#0ea5e9]">Tech</span> Lifestyle ⚡
           </h1>
           <p className="text-lg text-[#64748b] max-w-lg mx-auto md:mx-0">
-            Explore cutting-edge gadgets, smart accessories, and innovation — all in one sleek marketplace.
+            Explore cutting-edge gadgets, smart accessories, and innovation. All in one sleek marketplace.
           </p>
           <Link to="/shop">
             <Button
@@ -83,7 +83,7 @@ function LandingPage() {
       <section className="py-20 bg-white border-t border-gray-100">
         <div className="max-w-6xl mx-auto text-center px-6">
           <h2 className="text-3xl font-bold mb-10 text-[#1e293b]">
-            Why Choose <span className="text-[#0ea5e9]">GadgetHub</span>?
+            Why Choose <span className="text-[#0ea5e9]">Gadget Geeky</span>?
           </h2>
           <Row gutter={[24, 24]} justify="center">
             <Col xs={24} sm={12} md={6}>
